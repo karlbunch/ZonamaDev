@@ -6,7 +6,7 @@ nodaemon=true
 
 [program:nginx]
 user=swgemu
-command=${ZDHOME}/server/openresty/nginx/sbin/nginx
+command=${ZDHOME}/server/openresty/nginx/sbin/nginx -g "daemon off;"
 directory=/home/swgemu
 
 [program:server]
