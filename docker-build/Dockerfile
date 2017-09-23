@@ -48,14 +48,14 @@ RUN set -xe; \
 # Run ZonamaContainer build
 
 RUN set -xe; \
-    git clone https://github.com/lordkator/ZonamaContainer.git; \
+    git clone --progress -b master https://github.com/lordkator/ZonamaContainer.git; \
     ZonamaContainer/container/scripts/build;
 
 USER swgemu
 
 RUN set -xe; \
     cd $HOME; \
-    gosu swgemu /bin/bash ZonamaContainer/container/scripts/setup-server;
+    /bin/bash ZonamaContainer/container/scripts/setup-server;
 
 ENTRYPOINT ["${HOME}/bin/docker-entrypoint.sh"]
 

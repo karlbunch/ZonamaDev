@@ -11,22 +11,6 @@ LUA_BIGNUM='4611686018427387904' # 2^62
 
 msg "Installing Lua 5.3"
 
-need=()
-for pkg in ${LUA53_PACKAGES}
-do
-    if dpkg -s $pkg > /dev/null 2>&1; then
-	:
-    else
-	need+=($pkg)
-    fi
-done
-
-if [ "${#need[@]}" -gt 0 ]; then
-    echo "Installing missing packages: ${need[@]}"
-    apt-get update
-    apt-get install -y ${need[@]}
-fi
-
 umask 022
 
 mkdir ${EXTERNAL_SRC_DIR} && echo "Created ${EXTERNAL_SRC_DIR} directory"
