@@ -13,7 +13,6 @@ ENV ZC_VERSION='1.0.0' \
     SHELL=/bin/bash \
     TZ=Etc/UTC
 
-
 # EXPOSE 44480 # HTTP EmuYoda - Dangerous!
 #      HTTPS EmuYoda | StatusPort | LoginPort | PingPort | GalaxyPort
 EXPOSE 44443           44455        44453       44462      44463
@@ -32,10 +31,11 @@ EXPOSE 44443           44455        44453       44462      44463
 # DBPASS
 # DBSECRET
 
+WORKDIR ${HOME}
+
 RUN set -xe; \
 # Create user
     useradd -m -U swgemu -G adm,sudo -s /bin/bash; \
-    cd ${HOME}; \
     mkdir -p Desktop/SWGEmu; \
     echo 'APT::Install-Recommends "0";\nAPT::Install-Suggests "0";' > /etc/apt/apt.conf.d/01norecommends; \
     echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list; \
@@ -44,19 +44,12 @@ RUN set -xe; \
     apt-get install -y moreutils git ca-certificates; \
     apt-get -t jessie-backports install gosu; \
 # Avoid java install failure, see https://github.com/kubernetes/kubernetes/issues/1806
-    for i in 1 2 3 4 5 6 7 8; do mkdir -p /usr/share/man/man$i; done;
+    for i in 1 2 3 4 5 6 7 8; do mkdir -p /usr/share/man/man$i; done; \
 # Run ZonamaContainer build
-
-RUN set -xe; \
     git clone --progress -b master https://github.com/lordkator/ZonamaContainer.git; \
-    ZonamaContainer/container/scripts/build;
+    ZonamaContainer/container/scripts/build; \
+    gosu swgemu ZonamaContainer/container/scripts/setup-server;
 
-USER swgemu
+ENTRYPOINT ["/home/swgemu/ZonamaContainer/container/scripts/docker-entrypoint.sh"]
 
-RUN set -xe; \
-    cd $HOME; \
-    /bin/bash ZonamaContainer/container/scripts/setup-server;
-
-ENTRYPOINT ["${HOME}/bin/docker-entrypoint.sh"]
-
-CMD ["${HOME}/ZonamaContainer/container/scripts/start-server"]
+CMD ["/usr/bin/supervisord"]
