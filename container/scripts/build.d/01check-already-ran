@@ -5,6 +5,6 @@
 if full_run_not_complete; then
     :
 else
-    msg "** ALREADY RAN TO RE-RUN RUN: zdcfg clear-flag firstboot/__full_run.status"
+    msg "** ALREADY RAN TO RE-RUN RUN: zdcfg clear-flag build/__full_run.status"
     exit 0
 fi

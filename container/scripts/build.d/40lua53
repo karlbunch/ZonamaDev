@@ -1,0 +1,78 @@
+#!/bin/bash
+#
+# 40lua53 - Get Lua 5.3
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Mon Jan 25 06:13:09 EST 2016
+#
+
+LUA_BIGNUM='4611686018427387904' # 2^62
+
+msg "Installing Lua 5.3"
+
+need=()
+for pkg in ${LUA53_PACKAGES}
+do
+    if dpkg -s $pkg > /dev/null 2>&1; then
+	:
+    else
+	need+=($pkg)
+    fi
+done
+
+if [ "${#need[@]}" -gt 0 ]; then
+    echo "Installing missing packages: ${need[@]}"
+    apt-get update
+    apt-get install -y ${need[@]}
+fi
+
+umask 022
+
+mkdir ${EXTERNAL_SRC_DIR} && echo "Created ${EXTERNAL_SRC_DIR} directory"
+mkdir ${EXTERNAL_SRC_DIR}/tarballs && echo "Created ${EXTERNAL_SRC_DIR}/tarballs directory"
+pushd ${EXTERNAL_SRC_DIR}
+
+cd ${EXTERNAL_SRC_DIR}/tarballs
+
+LUA53_TAR=$PWD/$(basename "${LUA53_URL}")
+
+rm -f "${LUA53_TAR}" && echo "** Removed old ${LUA53_TAR}"
+
+wget --progress=dot "${LUA53_URL}" || error "Failed to download ${LUA53_URL}" 128
+
+[ -f $LUA53_TAR ] || error "Can't find downloaded file: $LUA53_TAR" 129
+
+(cd ${EXTERNAL_SRC_DIR};tar xzf $LUA53_TAR)
+
+dir="${EXTERNAL_SRC_DIR}/"$(basename $LUA53_TAR .tar.gz)
+
+cd $dir || error "Failed to cd to ${dir}" 126
+
+echo "Building in ${PWD}"
+
+if time make linux > make.out 2>&1; then
+    :
+else
+    error "Make returned $?" 126
+fi
+
+make install > make-install.out 2>&1
+
+popd
+
+# Check of we have 64 bit ints
+bignum=$(echo 'print('${LUA_BIGNUM}')' | /usr/local/bin/lua -)
+if [ "$bignum" != "${LUA_BIGNUM}" ]; then
+    error "** /usr/local/bin/lua not built with 64bit ints!" 140
+fi
+
+read lua lua_ver rest <<< $(/usr/local/bin/lua -v 2>&1)
+
+msg "LUA VERSION $lua_ver"
+
+if [ "X$lua_ver" != "X${LUA53_VERSION}" ]; then
+    notice "Lua Upgrade Failed" "Expected Lua Version ${LUA53_VERSION} but version ${lua_ver} is installed in /usr/local/bin/lua"
+else
+    step_complete 0 "version=$lua_ver"
+fi

@@ -1,0 +1,12 @@
+#!/bin/bash
+(
+    msg "Building Core3"
+    set -x
+    export MAKE=$(type -P make)' -j'$(nproc)
+    cd ${WORKSPACE}/PublicEngine/MMOEngine;
+    make
+    chmod +x bin/idlc
+    cd "${BUILD_DIR}"
+    make -k config
+    make -k build
+)

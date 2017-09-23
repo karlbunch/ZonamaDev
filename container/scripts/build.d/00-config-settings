@@ -9,10 +9,10 @@
 #
 ## Common configs
 source $(dirname $ME)/../../common/global.config
-source $(dirname $ME)/../../common/basebox.config
+source $(dirname $ME)/../../common/build.config
 #
 ## Sanity check
-if [ -z "$PACKAGES" ]; then
-    msg "** SOMETHING IS WRONG PACKAGES=[$PACKAGES]!!! **"
+if [ -z "$RUN_PACKAGES" ]; then
+    msg "** SOMETHING IS WRONG RUN_PACKAGES=[$RUN_PACKAGES]!!! **"
     exit 255
 fi

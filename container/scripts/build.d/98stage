@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# 98stage - Cleanup and stage binaries for container load
+#
+msg "Cleanup and stage for container load"
+mkdir -p ${RUN_DIR}
+mv ${WORKSPACE}/Core3/MMOCoreORB/bin ${RUN_DIR}/Core3/MMOCoreORB/stage-bin
+rm -fr ${WORKSPACE}
+apt-mark showmanual | xargs -t apt-mark auto
+cat ${ZDHOME}/run_packages.txt | xargs -t apt-mark manual
+apt-get purge -y --auto-remove
+rm -fr /var/lib/apt/lists/* /usr/share/man/man* /usr/local/bin/idlc

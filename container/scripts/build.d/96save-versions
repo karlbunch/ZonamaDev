@@ -1,0 +1,6 @@
+#!/bin/bash
+date > ${ZDHOME}/build-date
+cd ${WORKSPACE}/PublicEngine/MMOEngine
+git rev-parse refs/heads/${ENGINE_BRANCH:-master} > ${ZDHOME}/engine-version
+cd ${WORKSPACE}/Core3/MMOCoreORB;
+git rev-parse refs/heads/${CORE3_BRANCH:-unstable} > ${ZDHOME}/Core3/core3-version;

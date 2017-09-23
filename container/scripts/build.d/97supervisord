@@ -1,0 +1,11 @@
+#!/bin/bash
+
+cat << EOF > /etc/supervisor/conf.d/supervisord-core3.conf
+[supervisord]
+nodaemon=true
+
+[program:core3]
+user=swgemu
+command=/home/swgemu/ZonamaContainer/scripts/container-start
+directory=/home/swgemu
+EOF

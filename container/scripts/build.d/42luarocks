@@ -10,7 +10,7 @@
 LUAROCKS_TEST_FILE="/usr/local/bin/luarocks"
 
 if [ ! -f ${LUAROCKS_TEST_FILE} ]; then
-(
+  (
     umask 022
 
     tmpdir=$(mktemp -d /tmp/$(basename $ME).XXXXXX)
@@ -40,13 +40,12 @@ if [ ! -f ${LUAROCKS_TEST_FILE} ]; then
     cd $HOME
 
     rm -fr ${tmpdir}
-)
+
+    msg "Installed luarocks"
+  )
 fi
 
-if [ ! -f /usr/local/lib/lua/5.1/socket/unix.so ]; then
-    echo "Install luasocket"
-    luarocks install luasocket
-fi
+luarocks install luasocket && msg "Installed luasocket"
 
 if echo 'require "socket"'|lua -; then
     echo "Lua socket installed"

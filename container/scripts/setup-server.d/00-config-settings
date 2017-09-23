@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Settings for devsetup scripts
+# Settings for server setup
 #
 # NOTE: This file is named 00-config-settings to make sure it loads first, don't make anything load sooner than this file!
 #

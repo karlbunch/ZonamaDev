@@ -1,1 +1,0 @@
-[ -f /etc/default/sysstat ] && sed '/^ENABLED/s/".*/"true"/' -i /etc/default/sysstat && echo "Enabled sysstat"

@@ -1,2 +1,0 @@
-${ZDHOME}/ZonamaDev/fasttrack/bin/zdcfg set-flag suspend_devsetup
-${ZDHOME}/ZonamaDev/fasttrack/bin/zdcfg set-flag suspend_fasttrack

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 55clone - Clone the git repos from public URL
+# 55clone - Clone the git repos
 #
 # Author: Lord Kator <lordkator@swgemu.com>
 #
@@ -9,36 +9,18 @@
 # Depends: REPO_PUBLIC_URL REPO WORKSPACE
 #
 
-[ -n "$WORKSPACE" ] || error "Required setting WORKSPACE missing." 155
-[ -n "$REPO_PUBLIC_URL" ] || error "Required setting REPO_PUBLIC_URL missing." 155
-[ -n "$REPOS" ] || error "Reqiured setting REPO missing." 155
-
-check_repos() {
-    # is it cloned already?
-    local missing=''
-
-    for i in $REPOS
-    do
-	if [ -f $i/.git/HEAD ]; then
-	    echo "Repo $i is already cloned in $WORKSPACE/$i"
-	else
-	    missing="$missing   $i"
-	fi
-    done
-
-    if [ -z "$missing" ]; then
-	return
+for depend in WORKSPACE CORE3_REPO_URL CORE3_BRANCH ENGINE_REPO_URL ENGINE_BRANCH
+do
+    if [ -n "${!depnd}" ]; then
+        error "Required setting ${depend} missing." 155
     fi
+done
 
-    msg "Repos to Clone: $missing"
-
-    for i in $missing
-    do
-	echo "Clone $i from ${REPO_PUBLIC_URL}"
-
-	git clone --progress ${REPO_PUBLIC_URL}/${i}.git 2>&1 | sed "s/^/git-clone-$i: /" &
-    done
-
+clone_repos() {
+    msg "Cloning Core3: ${CORE3_REPO_URL} (${CORE3_BRANCH})"
+    git clone --progress -b ${CORE3_BRANCH} ${CORE3_REPO_URL} "${WORKSPACE}/Core3" &
+    msg "Cloning Engine: ${ENGINE_REPO_URL} (${ENGINE_BRANCH})"
+    git clone --progress -b ${ENGINE_BRANCH} ${ENGINE_REPO_URL} "${WORKSPACE}/PublicEngine" &
     wait
 }
 
@@ -49,7 +31,7 @@ make_links() {
 	[ -d PublicEngine ] && ln -s PublicEngine/MMOEngine .
 	[ -d Core3 ] && ln -s Core3/MMOCoreORB .
 	if [ -f PublicEngine/MMOEngine/bin/idlc -a ! -x /usr/local/bin/idlc ]; then
-	    (echo export CLASSPATH=$PWD/PublicEngine/MMOEngine/bin/idlc.jar;cat PublicEngine/MMOEngine/bin/idlc) | sudo tee /usr/local/bin/idlc
+	    (echo export CLASSPATH=$PWD/PublicEngine/MMOEngine/bin/idlc.jar;cat PublicEngine/MMOEngine/bin/idlc) > /usr/local/bin/idlc
 	    sudo chmod 755 /usr/local/bin/idlc
 	fi
     )
@@ -77,6 +59,6 @@ make_links() {
 
 [ ! -d $WORKSPACE ] && mkdir $WORKSPACE && echo "Created $WORKSPACE"
 pushd $WORKSPACE
-check_repos
+clone_repos
 make_links
 popd

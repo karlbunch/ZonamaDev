@@ -7,10 +7,6 @@
 # Created: Mon Dec 28 16:42:16 EST 2015
 #
 
-# Add Googles's chrome repo to sources
-wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
-
 (
     # die on error
     set -e
@@ -21,8 +17,6 @@ echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources
     ucf --purge /boot/grub/menu.lst
 
     export DEBIAN_FRONTEND=noninteractive
-
-    # exit if anything returns error
 
     # Get latest repo locations
     apt-get update
@@ -37,30 +31,21 @@ echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources
         fi
     done
 
-    msg "Install Packages"
+    msg "Install Run Packages"
 
-    echo ">> PACKAGES: $PACKAGES $EXTRAS"
+    echo ">> RUN_PACKAGES: $RUN_PACKAGES"
 
     for i in 1 2 3
     do
-        if apt-get -y install $PACKAGES $EXTRAS; then
+        if apt-get -y install $PACKAGES $EXTRA_PACKAGES; then
             break
         else
             notice "apt-get failed RET=$? RETRY=$i"
         fi
     done
 
-    apt-get -y autoremove
-
-    if dpkg -s sysvinit-core > /dev/null; then
-        :
-    else
-        # Start out in text console until vbguest can update video drivers
-        systemctl set-default -f multi-user.target
-
-        # Wait a bit for network to start
-        systemctl enable systemd-networkd-wait-online
-    fi
+    # Save list of what is manually installed
+    apt-mark showmanual > ${ZDHOME}/run_packages.txt
 )
 
 ret=$?
