@@ -199,6 +199,10 @@ full_run_complete() {
     date "+%s 0 seconds=$SECONDS" > "${RUN_FLAGS_DIR}/__full_run.status"
 }
 
+logger() {
+    /usr/bin/logger ${LOGGER_ARGS} $@
+}
+
 # We at least made it this far!
 echo 252 > $CHILD_STATUS
 

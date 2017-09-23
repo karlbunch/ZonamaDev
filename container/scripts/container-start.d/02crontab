@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# 02crontab - Setup user's crontab
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sat Sep 10 10:04:27 EDT 2016
+#
+
+setup_crontab() {
+    local n=$(crontab -l|egrep -v '^.*#'|fgrep "/home/${ZDUSER}/bin/zdupdate"|wc -l)
+    if [ $n -lt 1 ]; then
+        (let "hh=$RANDOM % 24";let "mm=$RANDOM % 60";crontab -l|grep -v zdupdate;echo ${mm}' '${hh}" * * * /home/${ZDUSER}/bin/zdupdate --auto 2>&1 | logger -i -t 'swgemu.zdupdate'")|crontab
+        crontab -l|egrep -v '^#'
+    fi
+}
+
+setup_crontab

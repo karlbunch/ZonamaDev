@@ -1,0 +1,7 @@
+if [ -f /etc/ssh/sshd_config -a ! -f /etc/ssh/ssh_host_rsa_key.pub ]; then
+    export DEBIAN_FRONTEND=noninteractive
+    unset UCF_FORCE_CONFFOLD
+    export UCF_FORCE_CONFFNEW=YES
+    /usr/sbin/dpkg-reconfigure openssh-server
+    step_complete 0
+fi

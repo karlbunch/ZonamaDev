@@ -1,2 +1,0 @@
-#!/bin/bash
-nohup ~/eclipse/eclipse $@ > ~/tmp/nohup.out 2>&1 &

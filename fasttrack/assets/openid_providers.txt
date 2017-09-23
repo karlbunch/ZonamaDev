@@ -1,6 +1,0 @@
-# List of openid providers setup in gerrit
-Github|?id=gerrit-oauth-provider_-github-oauth
-Google|?id=gerrit-oauth-provider_-google-oauth
-Launchpad|?id=https://login.launchpad.net/%2Bopenid
-Yahoo!|?id=https://me.yahoo.com
-Other OpenID Provider|?id=

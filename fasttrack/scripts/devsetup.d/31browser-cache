@@ -1,8 +1,0 @@
-#!/bin/bash
-#
-# If nginx isn't returning cache-control no-cache then clear browser cache on startup
-#
-if ! fgrep "add_header Cache-Control no-cache" "${OPENRESTY_DIR}/nginx/conf/nginx.conf" > /dev/null 2>&1; then
-    rm -fr "${ZDHOME}/.cache/google-chrome" "${ZDHOME}/.cache/mozilla"
-    msg "Cleared browser caches"
-fi

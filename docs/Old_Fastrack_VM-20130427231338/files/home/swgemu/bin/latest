@@ -1,8 +1,0 @@
-#!/bin/bash
-set -x
-cd ~/workspace/Core3
-git stash
-git pull
-git stash apply
-cd ~/workspace/PublicEngine
-git pull
