@@ -28,3 +28,5 @@ stage() {
     msg "Remove build files and packages"
     rm -fr ${WORKSPACE} /var/lib/apt/lists/* /usr/share/man/man* /usr/local/bin/idlc
 }
+
+stage
