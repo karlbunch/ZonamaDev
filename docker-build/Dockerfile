@@ -16,7 +16,7 @@ ENV ZC_VERSION='1.0.0' \
 
 # EXPOSE 44480 # HTTP EmuYoda - Dangerous!
 #      HTTPS EmuYoda | StatusPort | LoginPort | PingPort | GalaxyPort
-EXPOSE 44443           44455        44453       44462    | 44463
+EXPOSE 44443           44455        44453       44462      44463
 
 # You can control where syslog messages from ZC go with this setting:
 # ENV LOGGER_ARGS "--server mysyslog --port blah"
