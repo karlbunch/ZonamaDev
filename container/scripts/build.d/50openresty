@@ -61,11 +61,11 @@ trap 'st=$?;exec 1>&2;error "UNEXPECTED EXIT FROM BUILD" $st' 0
 
 set -xe
 
-time ./configure --with-luajit --with-http_stub_status_module --with-http_ssl_module  --prefix="${OPENRESTY_DIR}" > configure.out 2>&1
+time ./configure --with-luajit --with-http_stub_status_module --with-http_ssl_module  --prefix="${OPENRESTY_DIR}"
 
-time $MAKE > make.out 2>&1
+time $MAKE
 
-time $MAKE install > make-install.out 2>&1
+time $MAKE install
 
 mkdir "${OPENRESTY_DIR}/nginx/lua" && echo "Created ${OPENRESTY_DIR}/nginx/lua"
 
