@@ -7,15 +7,6 @@
 # Created: Sat Sep 23 08:38:51 EDT 2017
 #
 
-if [ -z "ZDUSER" ]; then
-    export ZDUSER='swgemu'
-fi
-
-if [ -z "${ZDHOME}" ]; then
-    echo "** Failed to parse global.config file: ZDUSER=[${ZDUSER}]"
-    exit 42
-fi
-
 export PATH=${ZDHOME}/ZonamaContainer/container/bin:$PATH
 
 cd ${ZDHOME}
