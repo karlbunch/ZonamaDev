@@ -5,6 +5,6 @@
 # NOTE: This file is named 00-config-settings to make sure it loads first, don't make anything load sooner than this file!
 #
 ## Get global config values
-source $(dirname $ME)/../../../common/global.config
+source $(dirname $ME)/../../common/global.config
 #
 # vi:set ft=sh

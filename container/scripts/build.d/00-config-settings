@@ -8,8 +8,8 @@
 [ $(id -u) -eq 0 ] || error "$ME must run as root, try: sudo $ME" 100
 #
 ## Common configs
-source $(dirname $ME)/../../../common/global.config
-source $(dirname $ME)/../../../common/build.config
+source $(dirname $ME)/../../common/global.config
+source $(dirname $ME)/../../common/build.config
 #
 ## Sanity check
 if [ -z "$RUN_PACKAGES" ]; then
