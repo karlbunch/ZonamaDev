@@ -1,0 +1,16 @@
+#!/bin/bash
+
+msg "Checking ${RUN_DIR}"
+
+volume_setup() {
+    local run_fs=$(df --output=source ${RUN_DIR} | sed -n 2p)
+
+    [ "${run_fs}" != "none" ] || error "No data filesystem mounted on ${RUN_DIR}" 254
+
+    if [ -d "${RUN_DIR}/log" ]; then
+        msg "${RUN_DIR} appears to be setup!"
+    else
+        msg "Copying stage files to ${RUN_DIR} on ${run_fs}"
+        gzip < ${RUN_DIR}-stage.tar.gz | pv -s $(<${RUN_DIR}-size}) | (cd ${RUN_DIR};tar xf -)
+    fi
+}

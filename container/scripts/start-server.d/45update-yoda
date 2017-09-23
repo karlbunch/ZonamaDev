@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# 45update-yoda - Install and Setup EmuYoda
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sat Sep 23 19:47:38 UTC 2017
+#
+
+sed -e "/^yodaSecret.*/s//yodaSecret = '$(LC_CTYPE=C < /dev/urandom tr -dc "A-Za-z0-9" | head -c32)'/" > ${EMUYODA_DIR}/yoda-config.lua

@@ -2,11 +2,29 @@
 #
 # 98stage - Cleanup and stage binaries for container load
 #
-msg "Cleanup and stage for container load"
-mkdir -p ${RUN_DIR}
-mv ${WORKSPACE}/Core3/MMOCoreORB/bin ${RUN_DIR}/Core3/MMOCoreORB/stage-bin
-rm -fr ${WORKSPACE}
-apt-mark showmanual | xargs -t apt-mark auto
-cat ${ZDHOME}/run_packages.txt | xargs -t apt-mark manual
-apt-get purge -y --auto-remove
-rm -fr /var/lib/apt/lists/* /usr/share/man/man* /usr/local/bin/idlc
+
+stage() {
+    msg "Stage run_dir for container start"
+    mkdir -p ${RUN_DIR}
+    (
+        set -xe
+        cd ${WORKSPACE}/Core3/MMOCoreORB/bin
+        read bytes _<<<$(du -sb .)
+        echo $bytes > ${RUN_DIR}-size
+        tar cf - . | pv | gzip > ${RUN_DIR}-stage.tar.gz
+    )
+
+    local ret=$?
+
+    [ "$ret" -eq 0 ] || error "Staging failed! RET=$?"
+
+    msg "Cleanup packages"
+    apt-mark showmanual | xargs -t apt-mark auto
+
+    cat ${ZDHOME}/run_packages.txt | xargs -t apt-mark manual
+
+    apt-get purge -y --auto-remove
+
+    msg "Remove build files and packages"
+    rm -fr ${WORKSPACE} /var/lib/apt/lists/* /usr/share/man/man* /usr/local/bin/idlc
+}

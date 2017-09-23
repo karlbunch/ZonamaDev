@@ -1,0 +1,7 @@
+#!/bin/bash
+
+while ! nc -nvz -w 2 ${DBHOST} ${DBPORT};
+do
+    echo "** Waiting for mysql host ${DBHOST}:${DBPORT} to become available."
+    sleep 5
+done

@@ -4,8 +4,17 @@ cat << EOF > /etc/supervisor/conf.d/supervisord-core3.conf
 [supervisord]
 nodaemon=true
 
-[program:core3]
+[program:nginx]
 user=swgemu
-command=/home/swgemu/ZonamaContainer/scripts/container-start
+command=${ZDHOME}/server/openresty/nginx/sbin/nginx
 directory=/home/swgemu
+
+[program:server]
+user=swgemu
+directory=/home/swgemu
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+command=${ZDHOME}/ZonamaContainer/container/scripts/start-server
 EOF
