@@ -44,8 +44,10 @@ RUN set -xe; \
     apt-get install -y moreutils git ca-certificates; \
     apt-get -t jessie-backports install gosu; \
 # Avoid java install failure, see https://github.com/kubernetes/kubernetes/issues/1806
-    for i in 1 2 3 4 5 6 7 8; do mkdir -p /usr/share/man/man$i; done; \
+    for i in 1 2 3 4 5 6 7 8; do mkdir -p /usr/share/man/man$i; done;
 # Run ZonamaContainer build
+
+RUN set -xe; \
     git clone https://github.com/lordkator/ZonamaContainer.git; \
     ZonamaContainer/container/scripts/build;
 
