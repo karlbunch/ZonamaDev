@@ -54,7 +54,7 @@ module(...)
 
 local yoda_config_path = os.getenv("HOME") .. '/server/emuyoda/yoda-config.lua'
 
-local zonamadev_config_home = os.getenv("ZONAMADEV_CONFIG_HOME") or (os.getenv("HOME") .. "/.config/ZonamaDev")
+local zonamadev_config_home = os.getenv("ZONAMADEV_CONFIG_HOME") or (os.getenv("HOME") .. "/.config/ZonamaContainer")
 
 ------------------------------------------------------------------------------
 -- Generic API helper functions
@@ -984,7 +984,7 @@ function service_control(path)
     r.response.output = ""
     r.response.command = cmd
 
-    local fh = io.popen(os.getenv("HOME") .. "/ZonamaDev/fasttrack/bin/swgemu --api " .. cmd)
+    local fh = io.popen(os.getenv("HOME") .. "/ZonamaContainer/container/bin/swgemu --api " .. cmd)
 
     while true do
 	local ln, err = fh:read("*l")

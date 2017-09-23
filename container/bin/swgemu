@@ -7,7 +7,7 @@
 # Created: Sun Jan  3 13:30:33 UTC 2016
 #
 
-source ~/ZonamaDev/common/global.config
+source ~/ZonamaContainer/common/global.config
 
 BUILD_LOG=${BUILD_DIR}/build.out
 IS_PANEL=false
@@ -51,8 +51,6 @@ main() {
     return $ret
 }
 
-ICON=${ZDHOME}/ZonamaDev/fasttrack/assets/swgemu_icon.png
-
 server_start() {
     local autostart=false
 
@@ -84,7 +82,7 @@ server_start() {
         echo "**                                                                    **"
         echo "** You need to copy the original game .tre files in to the guest.     **"
         echo "**                                                                    **"
-        echo "** On the host from your ZonamaDev/fasttrack server try this command: **"
+        echo "** On the host from your ZonamaContainer/fasttrack server try this command: **"
         echo "**                                                                    **"
         echo "**    ./tre.sh                                                        **"
         echo "**                                                                    **"
@@ -368,55 +366,6 @@ server_build() {
 
     local extra=""
 
-    local bdb_ver=$(sed -ne '/.*-ldb-\([0-9.]*\).*/s//\1/p' src/Makefile.am)
-
-    if [ "X${bdb_ver}" != 'X5.0' ]; then
-	if dpkg -s libdb5.3-dev > /dev/null 2>&1; then
-	    :
-	else
-	    echo
-	    echo "##########################################"
-	    echo "## AUTO-UPGRADING YOUR BDB TO BDB 5.3.x ##"
-	    echo "##########################################"
-	    echo
-	    sudo apt-get install -y libdb5.3-dev
-	    rm -f build/unix/config.log
-	    extra='clean '
-	fi
-    fi
-
-    if eval $LUA53_TEST_SRC > /dev/null 2>&1; then
-	if [ ! -d "${LUA53_TEST_DIR}" ]; then
-	    echo "** Source requires lua 5.3 but ${LUA53_TEST_DIR} doesn't exist."
-
-	    local upgrade_script=$(echo $HOME/ZonamaDev/fasttrack/scripts/devsetup.d/*lua53)
-	    local ret=255
-
-	    if [ -f "$upgrade_script" ]; then
-		echo
-		echo "##########################################"
-		echo "## AUTO-UPGRADING YOUR LUA TO LUA 5.3.x ##"
-		echo "##########################################"
-		echo
-		(cd $HOME;$HOME/ZonamaDev/fasttrack/scripts/devsetup --force $(basename $upgrade_script))
-
-		ret=$?
-		if [ $ret -eq 0 ]; then
-		    rm -f build/unix/config.log
-		    extra='clean '
-		fi
-	    else
-		ret=254
-		echo "** Can't find lua53 upgrade script!?"
-	    fi
-	    
-	    if [ $ret -ne 0 ]; then
-		echo "** You need to manually upgrade Lua to 5.3.x before you can build the server codebase. (ERR=${ret}) **"
-		return 12
-	    fi
-	fi
-    fi
-
     if [ ! -f build/unix/config.log ]; then
         extra="${extra}config"
     fi
@@ -427,27 +376,6 @@ server_build() {
     else
         echo "** BUILD FAILED **"
         return 11
-    fi
-}
-
-reset_server_ip() {
-    echo "** Re-running IP setup"
-    server_stop
-    zdcfg clear iplist
-    zdcfg clear server_ip
-
-    if [ -z "$DISPLAY" ]; then
-	export DISPLAY=':0'
-    fi
-
-    ~/ZonamaDev/fasttrack/scripts/devsetup --force 01-iplist 31server-ip
-
-    local server_ip=$(zdcfg get server_ip 2> /dev/null)
-
-    if [ -n "${server_ip}" ]; then
-	echo "** Server IP: ${server_ip}"
-    else
-	echo "** FAILED TO RESET server_ip"
     fi
 }
 
@@ -783,7 +711,7 @@ show_version()
 
     local git_remote=$(cd ${BUILD_DIR};git ls-remote origin refs/heads/unstable 2>> ${tmp} | cut -f1)
     local git_local=$(cd ${BUILD_DIR};git rev-parse refs/heads/unstable 2>> ${tmp})
-    local zd_tag=$(cd ~/ZonamaDev;git describe --tag 2>> ${tmp})
+    local zd_tag=$(cd ~/ZonamaContainer;git describe --tag 2>> ${tmp})
     local me_md5=$(md5sum < $me|cut -d' ' -f1 2>&1)
 
     unset GIT_SSH
@@ -869,7 +797,7 @@ post_debug()
                 ghi config --auth $ghuser
             fi
             echo "** Posting Issue..."
-            local issue=$(ghi open --label "type/automated-help" -m "$(post_debug_body)" -- lordkator/ZonamaDev 2>&1)
+            local issue=$(ghi open --label "type/automated-help" -m "$(post_debug_body)" -- Zonama/ZonamaContainer 2>&1)
             echo "** Looking for issue id"
             local issue_num=$(echo "$issue"|sed -ne '1s!^#\([0-9][0-9]*\):.*!\1!p')
 
@@ -887,7 +815,7 @@ post_debug()
                 gist --login
             fi
 
-            url=$(post_debug_body | gist -p -d "swgemu postdebug - ${title}" -f "ZonamaDev/post_debug-"$(date +%s)".md" 2>&1)
+            url=$(post_debug_body | gist -p -d "swgemu postdebug - ${title}" -f "ZonamaContainer/post_debug-"$(date +%s)".md" 2>&1)
             ;;
     esac
 
@@ -931,7 +859,7 @@ post_debug_body() {
     )
 
     exec 2>&1
-    echo -e "swgemu postdebug - ${title}\n\nZonamaDev Automated Post\n\n"
+    echo -e "swgemu postdebug - ${title}\n\nZonamaContainer Automated Post\n\n"
     date
     echo -e "\nDescription: ${desc}\n\n"
 
@@ -1105,35 +1033,6 @@ if [ "X$1" == "X--api" ]; then
     shift
     set -- $tmp --auto $*
     export PATH=${ZDHOME}/bin:/usr/local/bin:/usr/bin:/bin
-fi
-
-if [ "X$1" == "X--panel" ]; then
-    IS_PANEL=true
-    shift
-
-    if [ -n "$DISPLAY" ] && xset q > /dev/null 2>&1; then
-        HAVEX=true
-
-        if ! zdcfg check-flag disable_yoda_panel_buttons && [ -f ~/ZonamaDev/common/global.config ]; then
-            source ~/ZonamaDev/common/global.config
-
-            url='http://127.0.0.1:'${OPENRESTY_PORT}'/'
-
-            # Check for yoda API
-            r=$(curl -s -k "${url}/api/status/")
-
-            if echo $r | python -m json.tool > /dev/null 2>&1; then
-                if [ -n "$BROWSER" ]; then
-                    xdotool windowminimize $(xdotool search --onlyvisible --pid=$PPID --limit 1)
-                    url="${url}#/control?cmd="$(python -c "import urllib;print(urllib.quote('''$*'''))")
-                    echo ">> Launching Yoda: ${BROWSER} ${url}"
-                    setsid "${BROWSER}" "${url}" &
-                    sleep 2
-                    exit 0
-                fi
-            fi
-        fi
-    fi
 fi
 
 # Cron and API calls won't have TERM set

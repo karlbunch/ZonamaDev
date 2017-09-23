@@ -8,8 +8,8 @@
 #
 
 main() {
-    cfg="${ZONAMADEV_CONFIG_HOME}/config"
-    flags="${ZONAMADEV_CONFIG_HOME}/flags"
+    cfg="${ZONAMACONTAINER_CONFIG_HOME}/config"
+    flags="${ZONAMACONTAINER_CONFIG_HOME}/flags"
 
     [ -d "${cfg}" ] || mkdir -vp "${cfg}"
     [ -d "${flags}" ] || mkdir -vp "${flags}"
@@ -17,8 +17,8 @@ main() {
     local cmd=$1; shift
     local key=$1; shift
 
-    if [ "$cmd" = "get" -a "$key" = "ZONAMADEV_CONFIG_HOME" ]; then
-	echo "${ZONAMADEV_CONFIG_HOME}"
+    if [ "$cmd" = "get" -a "$key" = "ZONAMACONTAINER_CONFIG_HOME" ]; then
+	echo "${ZONAMACONTAINER_CONFIG_HOME}"
 	return 0
     fi
 
@@ -27,7 +27,7 @@ main() {
 	'get-flag' ) 	get_value "${flags}/${key}";	return $?;;
 	'check-flag' )	check_value "${flags}/${key}";	return $?;;
 	'clear-flag' )	clear_value "${flags}/${key}";	return $?;;
-	'dump-flags' )  (cd "${ZONAMADEV_CONFIG_HOME}";find flags -type f|sort|while read f; do echo "$f: "$(<$f); done ); return 0 ;;
+	'dump-flags' )  (cd "${ZONAMACONTAINER_CONFIG_HOME}";find flags -type f|sort|while read f; do echo "$f: "$(<$f); done ); return 0 ;;
 	'wait-flag' )	wait_value "${flags}/${key}" "$@";return $?;;
 	'set' )		set_value "${cfg}/${key}" "$@";	return $?;;
 	'get' )		get_value "${cfg}/${key}";	return $?;;
@@ -113,7 +113,7 @@ popd > /dev/null
 dir=$(dirname $ME)
 for i in "$HOME" "${dir}" "${dir}/.." "${dir}/../.." "${dir}/../../.."
 do
-    cfg="${i}/ZonamaDev/common/global.config"
+    cfg="${i}/ZonamaContainer/common/global.config"
 
     if [ -f "${cfg}" ]; then
 	export ZDCFGPATH="${cfg}"
@@ -133,7 +133,7 @@ main "$@"
 ret=$?
 
 if [ $(id -u) -eq 0 ]; then
-    chown ${ZDUSER}:${ZDUSER} "${ZONAMADEV_CONFIG_HOME}"
+    chown ${ZDUSER}:${ZDUSER} "${ZONAMACONTAINER_CONFIG_HOME}"
 fi
 
 exit $ret

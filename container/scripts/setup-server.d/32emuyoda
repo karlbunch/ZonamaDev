@@ -17,9 +17,9 @@ install_yoda() {
 
     echo "** setting up emuyoda **"
     (
-	ln -vs ~/ZonamaDev/server/emuyoda ${EMUYODA_DIR}
+	ln -vs ${ZDHOME}/ZonamaContainer/server/emuyoda ${EMUYODA_DIR}
 
-	cp -v ~/ZonamaDev/server/openresty/nginx/conf/* ${OPENRESTY_DIR}/nginx/conf
+	cp -v ${ZDHOME}/ZonamaContainer/server/openresty/nginx/conf/* ${OPENRESTY_DIR}/nginx/conf
 
 	sed -e "/^yodaSecret.*/s//yodaSecret = '$(dd if=/dev/urandom bs=1024 count=1 2> /dev/null|md5sum|cut -d' ' -f1)'/" -e "/^server_ip/d" ${EMUYODA_DIR}/yoda-config.lua.in > ${EMUYODA_DIR}/yoda-config.lua
 

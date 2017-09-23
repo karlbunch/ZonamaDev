@@ -11,14 +11,12 @@ if [ -z "ZDUSER" ]; then
     export ZDUSER='swgemu'
 fi
 
-eval source ~${ZDUSER}/ZonamaDev/common/global.config
-
 if [ -z "${ZDHOME}" ]; then
     echo "** Failed to parse global.config file: ZDUSER=[${ZDUSER}]"
     exit 42
 fi
 
-export PATH=${ZDHOME}/ZonamaDev/container/bin:$PATH
+export PATH=${ZDHOME}/ZonamaContainer/container/bin:$PATH
 
 cd ${ZDHOME}
 
@@ -51,7 +49,7 @@ build_datetime=$(date -u --date="@${build_timestamp}" "+%Y-%m-%dT%H:%M:%SZ")
 echo ">> Cleanup files that shouldn't be in the image."
 (
     cd ${ZDHOME}
-    rm -rf .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/config .visual .gerrit_username .mysql_history .devsetup.ran .tzdata.ran .config/ZonamaDev/config
+    rm -rf .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/config .visual .gerrit_username .mysql_history .devsetup.ran .tzdata.ran .config/ZonamaContainer/config
     rm -rf .xsession* .gitconfig .lesshst .ssh/id_* .subversion .cache .force_ip .iplist* .ssh/authorized_keys
 ) 2> /dev/null
 

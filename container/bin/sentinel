@@ -45,12 +45,6 @@ function main()
 	end
     end
 
-    if os.getenv("DISPLAY") then
-	if os.execute("xset q > /dev/null 2>&1") == 0 then
-	    havex = true
-	end
-    end
-
     for k, _ in pairs(termcap) do
 	local fh = io.popen("tput " .. k, 'r')
 	termcap[k] = fh:read("*a")
@@ -172,10 +166,6 @@ end
 function notice(title, msg)
     if options['quiet'] then
 	return
-    end
-
-    if havex then
-	os.execute('notify-send --icon=' .. os.getenv('HOME') .. '/ZonamaDev/fasttrack/assets/swgemu_icon.png --expire-time=30000 "Server Sentinel: ' .. title .. '" "' .. msg .. '"')
     end
 
     print("\n" .. termcap['smso'] .. "NOTICE: " .. title .. " - " .. msg .. termcap['rmso'] .. "\n")

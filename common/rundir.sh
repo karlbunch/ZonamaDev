@@ -24,7 +24,7 @@ fi
 dir=$(dirname $ME)
 for i in "$HOME" "${dir}" "${dir}/.." "${dir}/../.." "${dir}/../../.."
 do
-    cfg="${i}/ZonamaDev/common/global.config"
+    cfg="${i}/ZonamaContainer/common/global.config"
 
     if [ -f "${cfg}" ]; then
 	export ZDCFGPATH="${cfg}"

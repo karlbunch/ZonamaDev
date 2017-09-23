@@ -7,7 +7,7 @@
 -- ZDHOME - Home directory of ZD user (e.g. ~vagrant)
 -- WORKSPACE - Where are the repos at? (e.g. ~vagrant/workspace)
 -- RUN_DIR - Where is the core3 binary ran from? (e.g. ~vagrant/workspace/Core3/MMOCoreORB/bin
--- ZONAMADEV_CONFIG_HOME - Where are the ZD configuration files? (e.g. ~vagrant/.config/ZonamaDev)
+-- ZONAMADEV_CONFIG_HOME - Where are the ZD configuration files? (e.g. ~vagrant/.config/ZonamaContainer)
 --
 
 -- ---------- --
