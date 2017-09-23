@@ -46,10 +46,7 @@ RUN set -xe; \
 # Avoid java install failure, see https://github.com/kubernetes/kubernetes/issues/1806
     for i in 1 2 3 4 5 6 7 8; do mkdir -p /usr/share/man/man$i; done; \
 # Run ZonamaContainer build
-    git clone https://github.com/lordkator/ZonamaContainer.git;
-
-RUN set -xe; \
-    cd ${HOME}; \
+    git clone https://github.com/lordkator/ZonamaContainer.git; \
     ZonamaContainer/container/scripts/build;
 
 USER swgemu
