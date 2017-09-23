@@ -11,7 +11,8 @@ stage() {
         cd ${WORKSPACE}/Core3/MMOCoreORB/bin
         read bytes _<<<$(du -sb .)
         echo $bytes > ${RUN_DIR}-size
-        tar cf - . | pv | gzip > ${RUN_DIR}-stage.tar.gz
+        tar cf - . | pv 2>&3 | gzip > ${RUN_DIR}-stage.tar.gz
+        ls -l ${RUN_DIR}-stage.tar.gz
     )
 
     local ret=$?

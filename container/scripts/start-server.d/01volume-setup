@@ -11,6 +11,8 @@ volume_setup() {
         msg "${RUN_DIR} appears to be setup!"
     else
         msg "Copying stage files to ${RUN_DIR} on ${run_fs}"
-        gzip < ${RUN_DIR}-stage.tar.gz | pv -s $(<${RUN_DIR}-size}) | (cd ${RUN_DIR};tar xf -)
+        gzip < ${RUN_DIR}-stage.tar.gz | pv -s $(<${RUN_DIR}-size}) 2>&3 | (cd ${RUN_DIR};tar xf -)
     fi
 }
+
+volume_setup

@@ -53,9 +53,9 @@ if [ "X$CHILD_STATUS" = "X" ]; then
     echo 253 > $CHILD_STATUS
     ts=$(type -P ts)
     if [ -n "$ts" ]; then
-	$ME -- $* 2>&1 | $ts -s | logger -i -t ${TAG} -s 2>&1
+	$ME -- $* 3>&2 2>&1 | $ts -s | logger -i -t ${TAG} -s 2>&1
     else
-	$ME -- $* 2>&1 | logger -i -t ${TAG} -s 2>&1
+	$ME -- $* 3>&2 2>&1 | logger -i -t ${TAG} -s 2>&1
     fi
     st=$(<$CHILD_STATUS)
     if [ $st -eq 0 ]; then
