@@ -40,7 +40,21 @@
     done
 
     # Save list of what is manually installed
+    # Used later to remove build packages
     apt-mark showmanual > ${ZDHOME}/run_packages.txt
+
+    msg "Install Build Packages"
+
+    echo ">> BUILD_PACKAGES: $BUILD_PACKAGES"
+
+    for i in 1 2 3
+    do
+        if apt-get -y install $BUILD_PACKAGES; then
+            break
+        else
+            notice "apt-get failed RET=$? RETRY=$i"
+        fi
+    done
 )
 
 ret=$?
