@@ -8,11 +8,12 @@ stage() {
     mkdir -p ${RUN_DIR}
     (
         set -xe
-        cd ${WORKSPACE}/Core3/MMOCoreORB/bin
-        read bytes _<<<$(du -sb .)
-        echo $bytes > ${RUN_DIR}-size
-        tar cf - . | pv 2>&3 | gzip > ${RUN_DIR}-stage.tar.gz
-        ls -l ${RUN_DIR}-stage.tar.gz
+        mkdir -p /core3-data/tre
+        rm -fr ${ZDHOME}/Desktop/SWGEmu
+        mv ${WORKSPACE}/Core3/MMOCoreORB/bin /core3-data
+        chown -R ${ZDUSER}:${ZDUSER} /core3-data
+        ln -s /core3-data/bin ${RUN_DIR}
+        ln -s /core3-data/tre ${ZDHOME}/Desktop/SWGEmu
     )
 
     local ret=$?
